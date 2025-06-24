@@ -8,7 +8,7 @@ export async function bookRoom(req, res) {
   const { roomNumber, startDate, endDate, clientId } = req.body;
 
   if (!roomNumber || !startDate || !endDate || !clientId) {
-    return res.status(400).json({ error: 'Необходимо указать roomNumber(YYYY-MM-DD), startDate(YYYY-MM-DD), endDate и clientId' });
+    return res.status(400).json({ error: 'Необходимо указать roomNumber, startDate(YYYY-MM-DD), endDate(YYYY-MM-DD) и clientId' });
   }
 
   

@@ -1,4 +1,5 @@
 import User from '../models/User.js';
+const sendUserNotFound = (res) => res.status(404).json({ message: 'Пользователь не найден' });
 
 export async function registerUser(req, res, next) {
   const { email, firstName, lastName } = req.body;
@@ -14,7 +15,7 @@ export async function registerUser(req, res, next) {
     }
 
 
-    
+
     async function fetchWithTimeout(url, timeoutMs) {
       return Promise.race([
         fetch(url),
@@ -28,11 +29,11 @@ export async function registerUser(req, res, next) {
 
       const vipData = await vipResponse.json();
 
-      isVip = vipData.isvip; 
+      isVip = vipData.isvip;
     } catch (error) {
-      console.error("Ошибка:", error.message); 
+      console.error("Ошибка:", error.message);
     }
-    
+
     const user = await User.create({ email, firstName, lastName, isVip });
     res.status(201).json(user);
   } catch (err) {
@@ -41,9 +42,9 @@ export async function registerUser(req, res, next) {
 }
 
 export async function registerUserVip(req, res, next) {
-  const { email, isvip } = req.body;
+  const { email, isVip } = req.body;
 
-  if (typeof isvip !== 'boolean') {
+  if (typeof isVip !== 'boolean') {
     return res.status(400).json({ error: 'Поле isvip должно быть true или false' });
   }
 
@@ -51,10 +52,10 @@ export async function registerUserVip(req, res, next) {
     const user = await User.findOne({ where: { email } });
     if (!user) return sendUserNotFound(res);
 
-    user.isvip = isvip;
+    user.isVip = isVip;
     await user.save();
 
-    res.json({ email: user.email, isvip: user.isvip });
+    res.json({ email, isVip });
   } catch (err) {
     next(err);
   }

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import { registerUser, getUserById, registerUserVip} from '../controllers/users.controller.js';
+import { registerUser, getUserById, registerUserVip } from '../controllers/users.controller.js';
 
 // router.post('/login', loginUser);
 router.post('/register', registerUser);
