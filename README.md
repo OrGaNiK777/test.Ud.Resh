@@ -12,14 +12,8 @@ Dump и скрипты инициализации базы данных нахо
 Добавляем нового гостя в систему.
 
 ```bash
-curl -X POST \
--H "Content-Type: application/json" \
--d '{
-      "email": "luchshiy.kondidat@example.com",
-      "firstName": "Лучший",
-      "lastName": "Кондидат"
-}' \
-http://localhost:3000/api/users/register
+curl -X POST -H "Content-Type: application/json" -d '{"email": "luchshiy.kondidat@example.com", "firstName": "Лучший", "lastName": "Кондидат"}' http://localhost:3000/api/users/register
+
 ```
 
 #### Показать гостя по ID
