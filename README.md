@@ -27,7 +27,7 @@ curl -X GET -H "Content-Type: application/json" -d '{}' http://localhost:3000/ap
 
 Назначение VIP-статуса пользователю по его email.
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email": "luchshiy.kondidat@example.com", "isVip": true}' http://localhost:3000/api/users/patchvip
+curl -X PATCH -H "Content-Type: application/json" -d '{"email": "luchshiy.kondidat@example.com", "isVip": true}' http://localhost:3000/api/users/patchvip
 ```
 #### Показать все комнаты
 
