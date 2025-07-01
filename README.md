@@ -3,6 +3,7 @@
 ## hotel-reservation-api (Backend)
 
 Стек: PostgreSQL, Express.js, SQL, Node.js
+
 Dump и скрипты инициализации базы данных находятся в папке DB в корне hotel-reservation-api
 
 ### Руководство по обращению к API для тестирования
