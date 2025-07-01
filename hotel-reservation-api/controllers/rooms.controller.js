@@ -43,7 +43,6 @@ export async function getAvailableRooms(req, res) {
           endDate: { [Op.gte]: startDate }
         },
         attributes: ['roomNumber'],
-        lock: t.LOCK.UPDATE,
         transaction: t
       });
 

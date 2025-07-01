@@ -33,8 +33,7 @@ export async function bookRoom(req, res) {
           startDate: { [Op.lt]: endDate },
           endDate: { [Op.gt]: startDate }
         },
-        transaction: t,
-        lock: t.LOCK.UPDATE,
+        transaction: t
       });
 
       if (overlappingBooking) throw new Error('Номер уже забронирован на указанный период');
