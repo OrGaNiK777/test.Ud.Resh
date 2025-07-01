@@ -5,68 +5,68 @@ import sequelize from '../db.js';
 
 export async function getAllRooms(req, res) {
   try {
-    // Берём все комнаты из базы
+    // Получаем все комнаты из базы данных
     const rooms = await Room.findAll();
     return res.json(rooms);
   } catch (err) {
-    // Если ошибка — отвечаем с ошибкой сервера
+    // Ошибка сервера
     return res.status(500).json({ error: err.message });
   }
 }
 
 export async function getAvailableRooms(req, res) {
-  const { startDate, endDate } = req.body;
+  const { startDate, endDate } = req.query;
 
-  // Проверяем, что даты есть
+  // Проверка наличия обеих дат
   if (!startDate || !endDate) {
     return res.status(400).json({ error: 'Нужно указать startDate и endDate (YYYY-MM-DD)' });
   }
 
-  // Проверяем формат дат
+  // Проверка формата дат
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
   if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
     return res.status(400).json({ error: 'Даты должны быть в формате YYYY-MM-DD' });
   }
 
-  // Проверяем, что выезд позже заезда
+  // Проверка валидности диапазона дат (конец не раньше начала)
   if (new Date(startDate) >= new Date(endDate)) {
     return res.status(400).json({ error: 'Дата выезда должна быть позже даты заезда' });
   }
 
   try {
-    // Ищем свободные комнаты в транзакции
     const availableRooms = await sequelize.transaction(async (t) => {
-      // Находим комнаты, которые заняты в этот период
       const bookedRooms = await Booking.findAll({
         where: {
           startDate: { [Op.lte]: endDate },
           endDate: { [Op.gte]: startDate }
         },
-        attributes: ['roomNumber'],
-        transaction: t
+        attributes: ['roomNumber']
       });
 
-      // Составляем список занятых комнат
-      const bookedRoomNumbers = bookedRooms.map(b => b.roomNumber);
+      if (bookedRooms.length === 0) {
+        return null;
+      }
 
-      // Получаем все комнаты, которых нет в списке занятых
-      const rooms = await Room.findAll({
+      const bookedRoomNumbers = bookedRooms.map(b => b.roomNumber);
+      const freeRooms = await Room.findAll({
         where: {
-          roomNumber: bookedRoomNumbers.length ? { [Op.notIn]: bookedRoomNumbers } : undefined
+          roomNumber: { [Op.notIn]: bookedRoomNumbers }
         },
         transaction: t
       });
 
-      // Возвращаем свободные комнаты
-      return rooms;
+      return freeRooms;
     });
 
-    // Отдаём результат клиенту
+    if (availableRooms === null) {
+      return res.json({ message: 'Все комнаты за указанный период свободны' });
+    }
+
     return res.json(availableRooms);
 
   } catch (error) {
-    // Если ошибка — пишем в консоль и отвечаем ошибкой сервера
-    console.error('Ошибка при поиске свободных комнат:', error);
+    console.error('Ошибка при поиске свободных комнат:', error.message);
     return res.status(500).json({ error: 'Ошибка сервера' });
   }
+
 }

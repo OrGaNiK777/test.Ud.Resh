@@ -20,7 +20,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "luchshiy.kondida
 
 Просмотр профиля конкретного гостя по его ID.
 ```bash
-curl -X GET -H "Content-Type: application/json" -d '{}' http://localhost:3000/api/users/{guest_id}
+curl -X GET http://localhost:3000/api/users/{guest_id}
 ```
 Замените {guest_id} на реальный идентификатор пользователя.
 
@@ -34,13 +34,13 @@ curl -X PATCH -H "Content-Type: application/json" -d '{"email": "luchshiy.kondid
 
 Отображение полного списка комнат в отеле.
 ```bash
-curl -X GET -H "Content-Type: application/json" -d '{}' http://localhost:3000/api/rooms
+curl -X GET http://localhost:3000/api/rooms
 ```
 #### Показать свободные комнаты за период
 
 Получаем список свободных комнат на указанную дату.
 ```bash
-curl -X GET -H "Content-Type: application/json" -d '{"startDate": "2025-05-01", "endDate": "2025-05-02"}' http://localhost:3000/api/rooms/available
+curl -X GET "http://localhost:3000/api/rooms/available?startDate=2025-06-01&endDate=2025-06-10"
 ```
 #### Забронировать комнату
 
@@ -52,7 +52,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"roomNumber": 111, "startD
 
 Просмотр текущего списка забронированных комнат.
 ```bash
-curl -X GET -H "Content-Type: application/json" -d '{}' http://localhost:3000/api/bookings/getall
+curl -X GET http://localhost:3000/api/bookings/getall
 ```
 #### Отменить бронь комнаты по ID
 
